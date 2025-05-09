@@ -7,7 +7,7 @@
 ## 基础格式 
 
 ```
-<类型> <(作用域)> : <主题>
+<类型> (<作用域>) : <主题>
 
 <正文>
 
@@ -21,10 +21,41 @@
 - **脚注（Footer）**：用于标注破坏性变更（BREAKING CHANGE）或关联Issue（如 `Closes #123`）。
 *正文和脚注在JOJ提交中一般不用*
 
-### 常见提交类型
+**常见提交类型**
+-   `feat`: 新增功能。
+-   `fix`: 修复Bug。
+-   `docs`: 文档变更（如README、注释）。
+-   `style`: 代码格式调整（不影响逻辑，如空格、缩进）。
+-   `refactor`: 代码重构（未修复Bug或新增功能）。
+-   `perf`: 性能优化。
+-   `test`: 测试相关变更。
+-   `chore`: 构建流程或辅助工具的变动（如配置脚本）。
 
+了解更多：[Conventional Commits]([Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/))
 
-## commitizen（cmd)
+**JOJ3提交格式**
+```
+$ git commit -m "type(scope): message [option_list]"
+```
+例如：
+```
+$ git commit -m "fix(p3): memory leak fixed []"
+$ git commit -m "style(ex5): improve code quality [build]"
+$ git commit -m "revert(ex4): undo latest code []"
+$ git commit -m "docs(ex2): add comments [build joj]"
+```
+
+## commitizen
+**Requirement**: 已安装 Node.js 和 npm. [下载连接]([Node.js — 在任何地方运行 JavaScript](https://nodejs.org/zh-cn))
+1. 全局安装Commitizen：`npm install -g commitizen`
+2. `cd` 至项目根目录
+3. 运行以下命令 **在当前窗口下允许脚本执行**：`Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process`
+4. 初始化 Commitizen 配置：`npx commitizen init cz-conventional-changelog --save-dev --save-exact`
+5. 提交更新：`git cz`
+
 
 # Plug-in
 ## lazygit
+
+# Reference
+25sp ECE2800 README
