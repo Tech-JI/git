@@ -1,0 +1,114 @@
+#!/bin/sh
+#
+# An example hook script to check the commit log message.
+# Called by "git commit" with one argument, the name of the file
+# that has the commit message.  The hook should exit with non-zero
+# status after issuing an appropriate message if it wants to stop the
+# commit.  The hook is allowed to edit the commit message file.
+#
+# To enable this hook, rename this file to "commit-msg".
+
+# Uncomment the below to add a Signed-off-by line to the message.
+# Doing this in a hook is a bad idea in general, but the prepare-commit-msg
+# hook is more suited to it.
+#
+# SOB=$(git var GIT_AUTHOR_IDENT | sed -n 's/^\(.*>\).*$/Signed-off-by: \1/p')
+# grep -qs "^$SOB" "$1" || echo "$SOB" >> "$1"
+
+# This example catches duplicate Signed-off-by lines.
+
+#test "" = "$(grep '^Signed-off-by: ' "$1" |
+#	 sort | uniq -c | sed -e '/^[ 	]*1[ 	]/d')" || {
+#	echo >&2 Duplicate Signed-off-by lines.
+#	exit 1
+#}
+
+# Above is the default version.
+
+
+
+# Only checking the first line version:
+#!/bin/sh
+
+#commit_msg_file=$1
+#commit_msg=$(cat "$commit_msg_file")
+
+# 正则匹配 Conventional Commit 格式
+#pattern="^(feat|fix|docs|style|refactor|test|chore|perf|ci|build|revert)(\\([a-zA-Z0-9_-]+\\))!?: .+"
+
+#if ! echo "$commit_msg" | grep -qE "$pattern"; then
+#  echo "Wrong Conventional Commit"
+#  exit 1
+#fi
+
+
+
+
+# Checking the whole commit message:
+
+#!/bin/sh
+
+# Get the commit message
+commit_msg_file=$1
+commit_msg=$(cat "$commit_msg_file")
+
+# Remove comment lines (starting with '#') to get actual message content
+cleaned_msg=$(echo "$commit_msg" | grep -v '^#')
+
+# Regex pattern: check the commit header format
+pattern="^(feat|fix|docs|style|refactor|test|chore|perf|ci|build|revert)(\([a-zA-Z0-9_-]+\))?!?: .+"
+
+# Get the first line of the commit message (header line)
+first_line=$(echo "$cleaned_msg" | head -n 1)
+
+# Check if the first line matches the Conventional Commit format
+if ! echo "$first_line" | grep -qE "$pattern"; then
+  echo "The first line of the commit message does not follow the Conventional Commit format."
+  exit 1
+fi
+
+# Get the subject behind the colon
+# Check the length of the subject 
+subject=$(echo "$first_line" | sed -E 's/^.*: //')
+if [ ${#subject} -gt 50 ]; then
+  echo "The subject (after the colon) must not exceed 50 characters."
+  exit 1
+fi
+
+# Check if the first line ends with a period
+if [[ "$first_line" =~ \.$ ]]; then
+  echo "The first line of the commit message must not end with a period."
+  exit 1
+fi
+
+# Check if the second line is empty (separating body from header)
+# Only check if there is a second line
+second_line=$(echo "$cleaned_msg" | sed -n '2p')
+
+if [ -n "$second_line" ]; then
+  if [[ ! "$second_line" =~ ^\s*$ ]]; then
+    echo "The second line must be empty (used to separate header from body)."
+    exit 1
+  fi
+fi
+
+# Check if each line in the body exceeds 72 characters
+body_lines=$(echo "$cleaned_msg" | tail -n +3) # Get all lines after the second line (body)
+
+for line in $body_lines; do
+  if [ ${#line} -gt 72 ]; then
+    echo "Each line in the commit body must not exceed 72 characters."
+    exit 1
+  fi
+done
+
+# Check for a properly formatted BREAKING CHANGE in the footer
+footer=$(echo "$cleaned_msg" | grep -i "BREAKING CHANGE:")
+
+if [[ -n "$footer" && ! "$footer" =~ ^BREAKING[[:space:]]CHANGE: ]]; then
+  echo "BREAKING CHANGE must be formatted as: BREAKING CHANGE: ..."
+  exit 1
+fi
+
+# Allow the commit if all checks pass
+exit 0
