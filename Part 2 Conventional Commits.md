@@ -213,22 +213,21 @@ $ git commit --allow-empty -m "chores(p1): wrong commit msg [build joj]"
 
    ```jsonc
    {
-     // 启用插件
-     "conventionalCommits.enable": true,
-     // 自定义 type 列表
-     "conventionalCommits.types": [
-       { "type": "feat", "description": "新功能" },
-       { "type": "fix",  "description": "Bug 修复" },
-       // … 其他类型 …
+     // 自定义 scope 列表
+     "conventionalCommits.scopes": [
+       "ex1",
+       "ex2",
+       "p1"
+       //其他scope
      ]
    }
    ```
 
 3. **使用方式**
 
-   * 在 Source Control 面板点击 “+” 准备提交
-   * 按下插件提供的快捷键（如 `Ctrl+Alt+C`）或点击 “Conventional Commit” 按钮
-   * 在弹出的快速选择窗口中依次填写 `type`、`scope`、`subject`，自动生成符合规范的提交消息
+   * Command + Shift + P 或者 Ctrl + Shift + P, 输入 Conventional Commits, 然后按 Enter
+   * 或可以点击源代码管理按钮，再点击该窗口中的圆圈符号
+   * 在弹出的快速选择窗口中依次填写或选择已有的 `type`、`scope`、`emoji`、`subject`，自动生成符合规范的提交消息
 
 ### 6.2 在 LazyGit 中快速生成 Conventional Commit
 
@@ -236,13 +235,17 @@ $ git commit --allow-empty -m "chores(p1): wrong commit msg [build joj]"
 
    ```bash
    brew install jesseduffield/lazygit/lazygit  # macOS
-   sudo add-apt-repository ppa:lazygit-team/release && sudo apt update && sudo apt install lazygit  # Ubuntu
+   LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | \grep -Po '"tag_name": *"v\K[^"]*')
+curl -Lo lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/download/v${LAZYGIT_VERSION}/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz"
+tar xf lazygit.tar.gz lazygit
+sudo install lazygit -D -t /usr/local/bin/  # Ubuntu 25.04 earlier
+   sudo apt install lazygit  # Ubuntu 25.10 later
    ```
 
 2. **进入提交界面**
    在终端中运行 `lazygit`，然后按 `c`（commit）键进入提交消息编辑。
 
-3. **利用 Commitizen**
+3. **利用 Commitizen（可选）**
    如果已在项目中安装并配置好 Commitizen，可以在 LazyGit 的 commit 输入框中先执行交互式命令：
 
    ```bash
@@ -255,14 +258,78 @@ $ git commit --allow-empty -m "chores(p1): wrong commit msg [build joj]"
    在 `~/.config/lazygit/config.yml` 中添加：
 
    ```yaml
-   gui:
-     commit:
-       prefix: ""               # 让你先手动输入类型
-       template: ""             # 也可以设置预定义模板
+   customCommands:
+  # retrieved from: https://github.com/jesseduffield/lazygit/wiki/Custom-Commands-Compendium#conventional-commit
+  - key: "<c-v>"
+    context: "global"
+    description: "Create new conventional commit"
+    prompts:
+      - type: "menu"
+        key: "Type"
+        title: "Type of change"
+        options:
+          - name: "build"
+            description: "Changes that affect the build system or external dependencies"
+            value: "build"
+          - name: "feat"
+            description: "A new feature"
+            value: "feat"
+          - name: "fix"
+            description: "A bug fix"
+            value: "fix"
+          - name: "chore"
+            description: "Other changes that don't modify src or test files"
+            value: "chore"
+          - name: "ci"
+            description: "Changes to CI configuration files and scripts"
+            value: "ci"
+          - name: "docs"
+            description: "Documentation only changes"
+            value: "docs"
+          - name: "perf"
+            description: "A code change that improves performance"
+            value: "perf"
+          - name: "refactor"
+            description: "A code change that neither fixes a bug nor adds a feature"
+            value: "refactor"
+          - name: "revert"
+            description: "Reverts a previous commit"
+            value: "revert"
+          - name: "style"
+            description: "Changes that do not affect the meaning of the code"
+            value: "style"
+          - name: "test"
+            description: "Adding missing tests or correcting existing tests"
+            value: "test"
+      - type: "input"
+        title: "Scope"
+        key: "Scope"
+        initialValue: ""
+      - type: "menu"
+        key: "Breaking"
+        title: "Breaking change"
+        options:
+          - name: "no"
+            value: ""
+          - name: "yes"
+            value: "!"
+      - type: "input"
+        title: "message"
+        key: "Message"
+        initialValue: ""
+      - type: "confirm"
+        key: "Confirm"
+        title: "Commit"
+        body: "Are you sure you want to commit?"
+    command: "git commit --message '{{.Form.Type}}{{ if .Form.Scope }}({{ .Form.Scope }}){{ end }}{{.Form.Breaking}}: {{.Form.Message}}'"
+    loadingText: "Creating conventional commit..."
    ```
 
-   提交时按 `t` 选择 `feat`/`fix` 等，再按 `enter` 即可。
+   提交时按 `c-v` 选择所需选项，再按 `enter` 即可。
 
 # Reference
 24au ENGR1510J Lab1 & h0
+
 25sp ECE2800J README
+
+https://github.com/jesseduffield/lazygit
