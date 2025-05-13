@@ -225,7 +225,7 @@ $ git commit --allow-empty -m "chores(p1): wrong commit msg [build joj]"
 
 3. **使用方式**
 
-   * Command + Shift + P 或者 Ctrl + Shift + P, 输入 Conventional Commits, 然后按 Enter
+   * `Command + Shift + P` 或者 `Ctrl + Shift + P`, 输入 `Conventional Commits`, 然后按 `Enter`
    * 或可以点击源代码管理按钮，再点击该窗口中的圆圈符号
    * 在弹出的快速选择窗口中依次填写或选择已有的 `type`、`scope`、`emoji`、`subject`，自动生成符合规范的提交消息
 
