@@ -189,3 +189,70 @@ exit 0
 
 所有验证都通过后，脚本以状态码 0 退出，允许 Git 提交继续进行。
 
+上述方法的主要问题是 `.git/hooks` 目录不会随代码库一同分发，因为 `.git` 目录不受版本控制。这使得在团队中强制实施 Git Hooks 变得困难。这就是为什么我们推荐使用像 Husky 这样的工具来管理 Git Hooks。
+
+### 使用 Husky 管理 Git Hooks
+
+
+Husky 是一个用于管理 Git 钩子（Git hooks）的工具，它可以让你在 Git 工作流程中轻松集成自动化任务。与手动配置原生 Git 钩子相比，Husky 提供了更简单的配置方式、更好的跨平台支持和团队共享能力。
+
+Husky 官方教程：https://typicode.github.io/husky/
+
+## 基于 Conventional Commit 自动生成 Changelog
+
+### 安装 
+
+```bash
+# 全局安装
+npm install -g conventional-changelog-cli
+
+# 或作为项目依赖安装
+npm install --save-dev conventional-changelog-cli
+```
+
+### 基本使用
+
+生成 Changelog 并输出到控制台：
+
+```bash
+conventional-changelog -p angular -i CHANGELOG.md -s
+```
+
+参数说明：
+- `-p angular`：使用 angular 预设规范（也是最常用的规范）
+- `-i CHANGELOG.md`：指定输入/输出文件
+- `-s`：将内容输出到指定的文件（覆盖模式）
+
+### 首次生成完整 Changelog
+
+对于新项目，首次生成包含所有版本的 Changelog：
+
+```bash
+conventional-changelog -p angular -i CHANGELOG.md -s -r 0
+```
+
+参数说明：
+- `-r 0`：从第一个提交开始生成
+
+### 在 package.json 中添加脚本
+
+为了方便使用，可以在 `package.json` 中添加脚本：
+
+```json
+{
+  "scripts": {
+    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s",
+    "changelog:first": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0"
+  }
+}
+```
+
+然后可以使用以下命令生成 Changelog：
+
+```bash
+# 增量更新 Changelog
+npm run changelog
+
+# 首次生成完整 Changelog
+npm run changelog:first
+```
