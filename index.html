@@ -43,7 +43,7 @@
                         <div id="terminal-output"></div>
                         <div class="terminal-input-line">
                             <span class="prompt">user@git-tutorial:~/project$</span>
-                            <input type="text" id="terminal-input" autofocus>
+                            <input type="text" id="terminal-input" autocomplete="off" autofocus>
                         </div>
                     </div>
                     <div class="terminal-help">
@@ -111,6 +111,114 @@
     <footer>
         <p>Git 交互式学习平台 | 版权所有 &copy; 2025</p>
     </footer>
+
+    <!-- 添加调试信息显示区域 -->
+    <div id="debug-info" style="display: none; position: fixed; bottom: 10px; right: 10px; background: #f8f8f8; border: 1px solid #ddd; padding: 10px; max-width: 300px; max-height: 200px; overflow: auto; font-size: 12px;"></div>
+
+    <script>
+        // 捕获控制台日志和错误
+        (function() {
+            const debugInfo = document.getElementById('debug-info');
+            
+            if (debugInfo) {
+                // 在页面上显示调试信息
+                function logToDebugPanel(message, type = 'log') {
+                    const colors = {
+                        log: 'black',
+                        error: 'red',
+                        warn: 'orange',
+                        info: 'blue'
+                    };
+                    
+                    const div = document.createElement('div');
+                    div.style.color = colors[type] || 'black';
+                    div.textContent = message;
+                    debugInfo.appendChild(div);
+                    debugInfo.scrollTop = debugInfo.scrollHeight;
+                }
+                
+                // 重写console方法
+                const originalConsole = {
+                    log: console.log,
+                    error: console.error,
+                    warn: console.warn,
+                    info: console.info
+                };
+                
+                console.log = function(...args) {
+                    logToDebugPanel(args.join(' '), 'log');
+                    originalConsole.log.apply(console, args);
+                };
+                
+                console.error = function(...args) {
+                    logToDebugPanel(args.join(' '), 'error');
+                    originalConsole.error.apply(console, args);
+                    debugInfo.style.display = 'block'; // 出错时显示调试面板
+                };
+                
+                console.warn = function(...args) {
+                    logToDebugPanel(args.join(' '), 'warn');
+                    originalConsole.warn.apply(console, args);
+                };
+                
+                console.info = function(...args) {
+                    logToDebugPanel(args.join(' '), 'info');
+                    originalConsole.info.apply(console, args);
+                };
+                
+                // 捕获全局错误
+                window.onerror = function(message, source, lineno, colno, error) {
+                    logToDebugPanel(`Error: ${message} at ${source}:${lineno}:${colno}`, 'error');
+                    debugInfo.style.display = 'block';
+                    return false;
+                };
+                
+                // 显示调试面板的快捷键 (Ctrl+Shift+D)
+                document.addEventListener('keydown', function(e) {
+                    if (e.ctrlKey && e.shiftKey && e.key === 'D') {
+                        debugInfo.style.display = debugInfo.style.display === 'none' ? 'block' : 'none';
+                    }
+                });
+            }
+        })();
+    </script>
+
+    <!-- 确保脚本加载和执行 -->
+    <script>
+        // 检查脚本是否成功加载
+        function checkScriptLoaded() {
+            const scriptElement = document.querySelector('script[src="script.js"]');
+            
+            if (!scriptElement) {
+                console.error('没有找到script.js脚本标签');
+                return false;
+            }
+            
+            // 创建一个新的脚本元素，确保它会被加载
+            const newScript = document.createElement('script');
+            newScript.src = 'script.js';
+            newScript.onerror = function() {
+                console.error('加载script.js失败');
+                document.getElementById('debug-info').style.display = 'block';
+            };
+            
+            // 替换原有的脚本元素
+            scriptElement.parentNode.replaceChild(newScript, scriptElement);
+            
+            return true;
+        }
+        
+        // 页面加载完成后检查脚本
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                // 如果5秒后仍未初始化，可能是脚本没有正确加载
+                if (typeof initDOMElements === 'undefined') {
+                    console.error('脚本可能未正确加载，尝试重新加载');
+                    checkScriptLoaded();
+                }
+            }, 5000);
+        });
+    </script>
 
     <script src="script.js"></script>
 </body>

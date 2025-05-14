@@ -15,7 +15,7 @@ const tutorialData = [
             <p>在本教程中，你将学习 Git 的基本命令和工作流程。你可以在左侧的终端中输入命令，并在右侧看到这些命令对仓库产生的变化。</p>
             <p>准备好了吗？点击"下一步"开始学习创建 Git 仓库！</p>
         `,
-        hint: "这一步不需要执行任何命令，只需阅读关于 Git 的简介。准备好后，点击"下一步"继续。"
+        hint: "这一步不需要执行任何命令，只需阅读关于 Git 的简介。准备好后，点击“下一步”继续。"
     },
     {
         id: 2,
@@ -172,6 +172,17 @@ git push -u origin main</pre>
     }
 ];
 
+// 初始化变量，稍后会获取DOM元素
+let terminalInput, terminalOutput, tutorialContent, tutorialList, repoFiles;
+let commitList, currentBranchElement, hintBtn, nextStepBtn, helpModal, hintContent, closeModal;
+
+// 当前教程步骤
+let currentStep = 1;
+
+// 初始化模拟终端数据
+let terminalHistory = [];
+let currentDirectory = "~/";
+
 // 模拟仓库数据
 let repoData = {
     name: "my-project",
@@ -181,47 +192,166 @@ let repoData = {
     commits: []
 };
 
-// 初始化模拟终端数据
-let terminalHistory = [];
-let currentDirectory = "~/";
+// 初始化DOM元素
+function initDOMElements() {
+    console.log("正在初始化DOM元素");
+    
+    // 获取所有必要的DOM元素
+    terminalInput = document.getElementById('terminal-input');
+    terminalOutput = document.getElementById('terminal-output');
+    tutorialContent = document.getElementById('tutorial-content');
+    tutorialList = document.getElementById('tutorial-list');
+    repoFiles = document.getElementById('repo-files');
+    commitList = document.getElementById('commit-list');
+    currentBranchElement = document.getElementById('current-branch');
+    hintBtn = document.getElementById('hint-btn');
+    nextStepBtn = document.getElementById('next-step-btn');
+    helpModal = document.getElementById('help-modal');
+    hintContent = document.getElementById('hint-content');
+    closeModal = document.querySelector('.close');
+    
+    // 记录所有元素的状态
+    const elements = {
+        terminalInput,
+        terminalOutput,
+        tutorialContent,
+        tutorialList,
+        repoFiles,
+        commitList,
+        currentBranchElement,
+        hintBtn,
+        nextStepBtn,
+        helpModal,
+        hintContent,
+        closeModal
+    };
+    
+    // 检查哪些元素未找到
+    const missingElements = Object.entries(elements)
+        .filter(([, el]) => !el)
+        .map(([name]) => name);
+    
+    if (missingElements.length > 0) {
+        console.error(`未找到以下DOM元素: ${missingElements.join(', ')}`);
+        return false;
+    }
+    
+    console.log("所有DOM元素初始化成功");
+    return true;
+}
 
-// 当前教程步骤
-let currentStep = 1;
-
-// DOM 元素
-const terminalInput = document.getElementById('terminal-input');
-const terminalOutput = document.getElementById('terminal-output');
-const tutorialContent = document.getElementById('tutorial-content');
-const tutorialList = document.getElementById('tutorial-list');
-const repoFiles = document.getElementById('repo-files');
-const commitList = document.getElementById('commit-list');
-const currentBranchElement = document.getElementById('current-branch');
-const hintBtn = document.getElementById('hint-btn');
-const nextStepBtn = document.getElementById('next-step-btn');
-const helpModal = document.getElementById('help-modal');
-const hintContent = document.getElementById('hint-content');
-const closeModal = document.querySelector('.close');
+// 初始化按钮事件监听器
+function setupButtonListeners() {
+    console.log("设置按钮事件监听器");
+    const hintBtn = document.getElementById('hint-btn');
+    const nextStepBtn = document.getElementById('next-step-btn');
+    const closeModal = document.querySelector('.close');
+    const helpModal = document.getElementById('help-modal');
+    
+    if (hintBtn) {
+        // 移除旧监听器
+        const newHintBtn = hintBtn.cloneNode(true);
+        hintBtn.parentNode.replaceChild(newHintBtn, hintBtn);
+        
+        // 添加新监听器
+        newHintBtn.addEventListener('click', function() {
+            console.log("提示按钮被点击");
+            showHint();
+        });
+        console.log("提示按钮监听器设置完成");
+    } else {
+        console.error("找不到提示按钮元素");
+    }
+    
+    if (nextStepBtn) {
+        // 移除旧监听器
+        const newNextBtn = nextStepBtn.cloneNode(true);
+        nextStepBtn.parentNode.replaceChild(newNextBtn, nextStepBtn);
+        
+        // 添加新监听器
+        newNextBtn.addEventListener('click', function() {
+            console.log("下一步按钮被点击");
+            nextStep();
+        });
+        console.log("下一步按钮监听器设置完成");
+    } else {
+        console.error("找不到下一步按钮元素");
+    }
+    
+    if (closeModal && helpModal) {
+        // 移除旧监听器
+        const newCloseBtn = closeModal.cloneNode(true);
+        closeModal.parentNode.replaceChild(newCloseBtn, closeModal);
+        
+        // 添加新监听器
+        newCloseBtn.addEventListener('click', function() {
+            console.log("关闭按钮被点击");
+            helpModal.style.display = 'none';
+        });
+        
+        // 点击模态框外部关闭
+        window.addEventListener('click', function(e) {
+            if (e.target === helpModal) {
+                helpModal.style.display = 'none';
+            }
+        });
+        console.log("模态框关闭按钮监听器设置完成");
+    } else {
+        console.error("找不到关闭按钮或帮助模态框元素");
+    }
+}
 
 // 加载教程内容
 function loadTutorialContent(stepId) {
-    const tutorial = tutorialData.find(item => item.id === stepId);
-    if (tutorial) {
+    try {
+        console.log(`加载教程内容: 步骤 ${stepId}`);
+        
+        // 获取DOM元素
+        const tutorialContent = document.getElementById('tutorial-content');
+        const tutorialList = document.getElementById('tutorial-list');
+        
+        if (!tutorialContent || !tutorialList) {
+            console.error('无法找到教程内容或列表元素');
+            return;
+        }
+        
+        // 查找教程数据
+        const tutorial = tutorialData.find(item => item.id === stepId);
+        if (!tutorial) {
+            console.error(`未找到步骤 ${stepId} 的教程数据`);
+            return;
+        }
+        
+        // 更新教程内容
         tutorialContent.innerHTML = tutorial.content;
         
         // 更新侧边栏活动项
         const listItems = tutorialList.querySelectorAll('li');
         listItems.forEach(item => {
-            if (parseInt(item.dataset.step) === stepId) {
+            const itemStep = parseInt(item.dataset.step);
+            if (itemStep === stepId) {
                 item.classList.add('active');
             } else {
                 item.classList.remove('active');
             }
         });
+        
+        console.log(`教程内容加载完成: ${tutorial.title}`);
+    } catch (error) {
+        console.error(`加载教程内容时发生错误: ${error.message}`);
     }
 }
 
 // 更新仓库视图
 function updateRepoView() {
+    // 确保DOM元素已初始化
+    if (!repoFiles || !commitList || !currentBranchElement) {
+        if (!initDOMElements()) {
+            console.error('无法找到仓库视图的DOM元素');
+            return;
+        }
+    }
+    
     // 更新文件列表
     repoFiles.innerHTML = '';
     if (Object.keys(repoData.files).length === 0) {
@@ -297,7 +427,16 @@ function updateRepoView() {
 
 // 处理终端命令
 function processCommand(command) {
-    if (!command.trim()) return;
+    if (!command || !command.trim()) return;
+    
+    console.log(`处理命令: ${command}`);
+    
+    // 获取终端输出元素
+    const terminalOutput = document.getElementById('terminal-output');
+    if (!terminalOutput) {
+        console.error("找不到终端输出元素");
+        return;
+    }
     
     // 显示命令
     appendToTerminal(`<span class="prompt">user@git-tutorial:${currentDirectory}$</span> ${command}`);
@@ -307,40 +446,49 @@ function processCommand(command) {
     const cmd = args[0].toLowerCase();
     
     // 命令处理
-    switch (cmd) {
-        case 'mkdir':
-            handleMkdir(args);
-            break;
-        case 'cd':
-            handleCd(args);
-            break;
-        case 'git':
-            handleGit(args);
-            break;
-        case 'echo':
-            handleEcho(args);
-            break;
-        case 'ls':
-            handleLs();
-            break;
-        case 'cat':
-            handleCat(args);
-            break;
-        case 'clear':
-            terminalOutput.innerHTML = '';
-            break;
-        case 'help':
-            showHelp();
-            break;
-        default:
-            appendToTerminal(`Command not found: ${cmd}`);
+    try {
+        switch (cmd) {
+            case 'mkdir':
+                handleMkdir(args);
+                break;
+            case 'cd':
+                handleCd(args);
+                break;
+            case 'git':
+                handleGit(args);
+                break;
+            case 'echo':
+                handleEcho(args);
+                break;
+            case 'ls':
+                handleLs();
+                break;
+            case 'cat':
+                handleCat(args);
+                break;
+            case 'clear':
+                if (terminalOutput) {
+                    terminalOutput.innerHTML = '';
+                }
+                break;
+            case 'help':
+                showHelp();
+                break;
+            default:
+                appendToTerminal(`Command not found: ${cmd}`);
+        }
+        
+        // 记录命令历史
+        terminalHistory.push(command);
+        
+        // 检查教程进度
+        checkProgress(command);
+        
+        console.log(`命令处理完成: ${command}`);
+    } catch (error) {
+        console.error(`处理命令时发生错误: ${error.message}`);
+        appendToTerminal(`<span style="color: red;">Error: ${error.message}</span>`);
     }
-    
-    // 记录命令历史
-    terminalHistory.push(command);
-    
-    // 检查教程进度
-    checkProgress(command);
 }
 
 // 处理 mkdir 命令
@@ -802,86 +950,150 @@ function showHelp() {
 
 // 向终端添加输出
 function appendToTerminal(text) {
-    terminalOutput.innerHTML += `<div>${text}</div>`;
-    terminalOutput.scrollTop = terminalOutput.scrollHeight;
+    try {
+        const terminalOutput = document.getElementById('terminal-output');
+        if (!terminalOutput) {
+            console.error('无法找到终端输出元素');
+            return;
+        }
+        
+        const div = document.createElement('div');
+        div.innerHTML = text;
+        terminalOutput.appendChild(div);
+        terminalOutput.scrollTop = terminalOutput.scrollHeight;
+        console.log(`终端输出: ${text.replace(/<[^>]*>/g, '')}`);
+    } catch (error) {
+        console.error(`添加终端输出时发生错误: ${error.message}`);
+    }
 }
 
 // 检查教程进度
 function checkProgress(command) {
-    const steps = {
-        2: [
-            { cmd: 'mkdir my-project', next: false },
-            { cmd: 'cd my-project', next: false },
-            { cmd: 'git init', next: true }
-        ],
-        3: [
-            { cmd: 'echo', check: cmd => cmd.includes('README.md'), next: false },
-            { cmd: 'echo', check: cmd => cmd.includes('app.js'), next: false },
-            { cmd: 'git add', check: cmd => cmd.includes('README.md') && cmd.includes('app.js'), next: true }
-        ],
-        4: [
-            { cmd: 'git commit -m', next: true }
-        ],
-        5: [
-            { cmd: 'git status', next: false },
-            { cmd: 'git log', next: false },
-            { cmd: 'echo', check: cmd => cmd.includes('app.js'), next: false },
-            { cmd: 'git status', next: false },
-            { cmd: 'git add app.js', next: false },
-            { cmd: 'git commit -m', next: true }
-        ],
-        6: [
-            { cmd: 'git branch', next: false },
-            { cmd: 'git branch feature', next: false },
-            { cmd: 'git checkout feature', next: false },
-            { cmd: 'echo', check: cmd => cmd.includes('app.js'), next: false },
-            { cmd: 'git add app.js', next: false },
-            { cmd: 'git commit -m', next: false },
-            { cmd: 'git checkout main', next: true }
-        ],
-        7: [
-            { cmd: 'git merge feature', next: false },
-            { cmd: 'git branch -d feature', next: true }
-        ],
-        8: [
-            { cmd: 'git remote add origin', next: false },
-            { cmd: 'git push', next: true }
-        ]
-    };
-    
-    if (steps[currentStep]) {
-        for (const step of steps[currentStep]) {
-            let matched = false;
-            
-            if (step.check) {
-                matched = step.check(command);
-            } else {
-                matched = command.startsWith(step.cmd);
-            }
-            
-            if (matched && step.next) {
-                nextStepBtn.classList.add('pulse');
-                break;
+    try {
+        console.log(`检查进度: ${command}`);
+        
+        // 获取下一步按钮
+        const nextStepBtn = document.getElementById('next-step-btn');
+        if (!nextStepBtn) {
+            console.error('无法找到下一步按钮');
+            return;
+        }
+        
+        const steps = {
+            2: [
+                { cmd: 'mkdir my-project', next: false },
+                { cmd: 'cd my-project', next: false },
+                { cmd: 'git init', next: true }
+            ],
+            3: [
+                { cmd: 'echo', check: cmd => cmd.includes('README.md'), next: false },
+                { cmd: 'echo', check: cmd => cmd.includes('app.js'), next: false },
+                { cmd: 'git add', check: cmd => cmd.includes('README.md') && cmd.includes('app.js'), next: true }
+            ],
+            4: [
+                { cmd: 'git commit -m', next: true }
+            ],
+            5: [
+                { cmd: 'git status', next: false },
+                { cmd: 'git log', next: false },
+                { cmd: 'echo', check: cmd => cmd.includes('app.js'), next: false },
+                { cmd: 'git status', next: false },
+                { cmd: 'git add app.js', next: false },
+                { cmd: 'git commit -m', next: true }
+            ],
+            6: [
+                { cmd: 'git branch', next: false },
+                { cmd: 'git branch feature', next: false },
+                { cmd: 'git checkout feature', next: false },
+                { cmd: 'echo', check: cmd => cmd.includes('app.js'), next: false },
+                { cmd: 'git add app.js', next: false },
+                { cmd: 'git commit -m', next: false },
+                { cmd: 'git checkout main', next: true }
+            ],
+            7: [
+                { cmd: 'git merge feature', next: false },
+                { cmd: 'git branch -d feature', next: true }
+            ],
+            8: [
+                { cmd: 'git remote add origin', next: false },
+                { cmd: 'git push', next: true }
+            ]
+        };
+        
+        if (steps[currentStep]) {
+            for (const step of steps[currentStep]) {
+                let matched = false;
+                
+                if (step.check) {
+                    matched = step.check(command);
+                } else {
+                    matched = command.startsWith(step.cmd);
+                }
+                
+                if (matched && step.next) {
+                    console.log('命令匹配，激活下一步按钮');
+                    nextStepBtn.classList.add('pulse');
+                    break;
+                }
             }
         }
+    } catch (error) {
+        console.error(`检查进度时发生错误: ${error.message}`);
     }
 }
 
 // 显示提示
 function showHint() {
-    const tutorial = tutorialData.find(item => item.id === currentStep);
-    if (tutorial && tutorial.hint) {
+    try {
+        console.log('显示提示');
+        
+        // 获取DOM元素
+        const hintContent = document.getElementById('hint-content');
+        const helpModal = document.getElementById('help-modal');
+        
+        if (!hintContent || !helpModal) {
+            console.error('无法找到提示内容或模态框元素');
+            return;
+        }
+        
+        // 查找当前步骤的提示
+        const tutorial = tutorialData.find(item => item.id === currentStep);
+        if (!tutorial || !tutorial.hint) {
+            console.error(`当前步骤 ${currentStep} 没有提示信息`);
+            return;
+        }
+        
+        // 更新并显示提示
         hintContent.innerHTML = tutorial.hint;
         helpModal.style.display = 'block';
+        
+        console.log('提示显示成功');
+    } catch (error) {
+        console.error(`显示提示时发生错误: ${error.message}`);
     }
 }
 
 // 进入下一步
 function nextStep() {
-    if (currentStep < tutorialData.length) {
-        currentStep++;
-        loadTutorialContent(currentStep);
-        nextStepBtn.classList.remove('pulse');
+    try {
+        console.log('进入下一步');
+        
+        // 获取DOM元素
+        const nextStepBtn = document.getElementById('next-step-btn');
+        
+        if (currentStep < tutorialData.length) {
+            currentStep++;
+            console.log(`切换到步骤: ${currentStep}`);
+            loadTutorialContent(currentStep);
+            
+            if (nextStepBtn) {
+                nextStepBtn.classList.remove('pulse');
+            }
+        } else {
+            console.log('已经是最后一步');
+        }
+    } catch (error) {
+        console.error(`进入下一步时发生错误: ${error.message}`);
     }
 }
 
@@ -902,50 +1114,92 @@ function timeAgo(timestamp) {
     return `${Math.floor(seconds / 86400)} days ago`;
 }
 
+// 处理终端输入的事件
+function setupTerminalInputListener() {
+    console.log("设置终端输入监听器");
+    const terminalInput = document.getElementById('terminal-input');
+    
+    if (terminalInput) {
+        // 移除所有旧的事件监听器
+        const newInput = terminalInput.cloneNode(true);
+        terminalInput.parentNode.replaceChild(newInput, terminalInput);
+        
+        // 添加新的事件监听器
+        newInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                console.log("检测到Enter键");
+                const command = this.value;
+                processCommand(command);
+                this.value = '';
+            }
+        });
+        
+        // 确保聚焦
+        newInput.focus();
+        
+        // 为输入框添加可见的点击事件
+        newInput.style.cursor = 'text';
+        newInput.addEventListener('click', function() {
+            this.focus();
+        });
+        
+        console.log("终端输入监听器设置完成");
+        return newInput;
+    } else {
+        console.error("找不到终端输入元素");
+        return null;
+    }
+}
+
 // 事件监听器
-document.addEventListener('DOMContentLoaded', () => {
-    // 加载初始教程内容
-    loadTutorialContent(currentStep);
+document.addEventListener('DOMContentLoaded', function() {
+    console.log("DOM内容已加载完成");
     
-    // 终端输入监听
-    terminalInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
-            const command = terminalInput.value;
-            processCommand(command);
-            terminalInput.value = '';
+    try {
+        // 初始化DOM元素
+        const elementsInitialized = initDOMElements();
+        if (!elementsInitialized) {
+            console.error("DOM元素初始化失败");
+            document.getElementById('debug-info').style.display = 'block';
+            return;
         }
-    });
-    
-    // 教程导航点击事件
-    tutorialList.addEventListener('click', (e) => {
-        if (e.target.tagName === 'LI') {
-            const stepId = parseInt(e.target.dataset.step);
-            currentStep = stepId;
-            loadTutorialContent(stepId);
+        
+        // 加载初始教程内容
+        loadTutorialContent(currentStep);
+        
+        // 设置按钮事件监听器
+        setupButtonListeners();
+        
+        // 设置终端输入监听器
+        const terminalInputElement = setupTerminalInputListener();
+        
+        // 设置全局点击事件，保持终端输入焦点
+        if (terminalInputElement) {
+            document.addEventListener('click', function(e) {
+                // 如果点击的不是输入框本身，且不是模态框内容
+                if (e.target !== terminalInputElement && !e.target.closest('.modal-content')) {
+                    terminalInputElement.focus();
+                }
+            });
         }
-    });
-    
-    // 提示按钮点击事件
-    hintBtn.addEventListener('click', showHint);
-    
-    // 下一步按钮点击事件
-    nextStepBtn.addEventListener('click', nextStep);
-    
-    // 关闭模态框
-    closeModal.addEventListener('click', () => {
-        helpModal.style.display = 'none';
-    });
-    
-    // 点击模态框外部关闭
-    window.addEventListener('click', (e) => {
-        if (e.target === helpModal) {
-            helpModal.style.display = 'none';
+        
+        // 设置教程列表点击事件
+        if (tutorialList) {
+            tutorialList.addEventListener('click', function(e) {
+                if (e.target.tagName === 'LI') {
+                    const stepId = parseInt(e.target.dataset.step);
+                    if (!isNaN(stepId)) {
+                        currentStep = stepId;
+                        console.log(`切换到教程步骤: ${stepId}`);
+                        loadTutorialContent(stepId);
+                    }
+                }
+            });
         }
-    });
-    
-    // 聚焦终端输入
-    terminalInput.focus();
-    document.addEventListener('click', () => {
-        terminalInput.focus();
-    });
+        
+        console.log("Git教程应用已成功初始化");
+    } catch (error) {
+        console.error("初始化期间发生错误:", error);
+        document.getElementById('debug-info').style.display = 'block';
+    }
 });

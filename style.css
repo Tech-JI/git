@@ -161,6 +161,14 @@ header h1 {
     font-family: 'Courier New', monospace;
     font-size: 14px;
     outline: none;
+    caret-color: white; /* 使光标更明显 */
+    padding: 2px;
+    border-bottom: 1px solid #555; /* 添加底部边框 */
+    transition: border-color 0.3s;
+}
+
+#terminal-input:focus {
+    border-bottom-color: #00ff00; /* 聚焦时改变底部边框颜色 */
 }
 
 .terminal-help {
@@ -172,16 +180,34 @@ header h1 {
 }
 
 .terminal-help button {
-    padding: 5px 10px;
+    padding: 8px 15px;
     background-color: #0366d6;
     color: white;
     border: none;
     border-radius: 3px;
     cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.2s, transform 0.1s;
 }
 
 .terminal-help button:hover {
     background-color: #0255b3;
+    transform: translateY(-2px);
+}
+
+.terminal-help button:active {
+    transform: translateY(1px);
+}
+
+/* 添加按钮脉冲动画 */
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(3, 102, 214, 0.7); }
+    70% { box-shadow: 0 0 0 10px rgba(3, 102, 214, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(3, 102, 214, 0); }
+}
+
+.terminal-help button.pulse {
+    animation: pulse 1.5s infinite;
 }
 
 /* 仓库样式 */
