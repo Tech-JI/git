@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Git 基础教程 - 交互式学习</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <header>
+        <h1>Git 互动学习平台</h1>
+        <p>通过实践学习 Git 基础命令</p>
+    </header>
+
+    <div class="container">
+        <div class="sidebar">
+            <h2>教程目录</h2>
+            <ul id="tutorial-list">
+                <li data-step="1" class="active">Git 简介</li>
+                <li data-step="2">创建仓库 (git init)</li>
+                <li data-step="3">添加文件 (git add)</li>
+                <li data-step="4">提交更改 (git commit)</li>
+                <li data-step="5">查看状态和历史 (git status/log)</li>
+                <li data-step="6">分支操作 (git branch/checkout)</li>
+                <li data-step="7">合并分支 (git merge)</li>
+                <li data-step="8">远程仓库操作 (git push/pull)</li>
+            </ul>
+        </div>
+
+        <div class="main-content">
+            <div class="workspace">
+                <div class="terminal-container">
+                    <div class="terminal-header">
+                        <div class="terminal-buttons">
+                            <span class="terminal-btn red"></span>
+                            <span class="terminal-btn yellow"></span>
+                            <span class="terminal-btn green"></span>
+                        </div>
+                        <span class="terminal-title">终端</span>
+                    </div>
+                    <div class="terminal">
+                        <div id="terminal-output"></div>
+                        <div class="terminal-input-line">
+                            <span class="prompt">user@git-tutorial:~/project$</span>
+                            <input type="text" id="terminal-input" autofocus>
+                        </div>
+                    </div>
+                    <div class="terminal-help">
+                        <button id="hint-btn">提示</button>
+                        <button id="next-step-btn">下一步</button>
+                    </div>
+                </div>
+
+                <div class="repo-container">
+                    <div class="repo-header">
+                        <div class="repo-buttons">
+                            <span class="repo-btn red"></span>
+                            <span class="repo-btn yellow"></span>
+                            <span class="repo-btn green"></span>
+                        </div>
+                        <span class="repo-title">GitHub 仓库</span>
+                    </div>
+                    <div class="repo-content">
+                        <div class="repo-nav">
+                            <div class="repo-info">
+                                <i class="fas fa-book"></i>
+                                <span id="repo-name">my-project</span>
+                                <span class="repo-visibility">Public</span>
+                            </div>
+                            <div class="repo-tabs">
+                                <span class="active"><i class="fas fa-code"></i> 代码</span>
+                                <span><i class="fas fa-exclamation-circle"></i> Issues</span>
+                                <span><i class="fas fa-code-branch"></i> Pull Requests</span>
+                            </div>
+                        </div>
+                        <div class="repo-branches">
+                            <div class="branch-selector">
+                                <i class="fas fa-code-branch"></i>
+                                <span id="current-branch">main</span>
+                                <i class="fas fa-caret-down"></i>
+                            </div>
+                        </div>
+                        <div class="repo-files" id="repo-files">
+                            <!-- 文件内容将由JavaScript动态生成 -->
+                        </div>
+                        <div class="repo-commits" id="repo-commits">
+                            <h3>提交历史</h3>
+                            <div class="commit-list" id="commit-list">
+                                <!-- 提交历史将由JavaScript动态生成 -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tutorial-content" id="tutorial-content">
+                <!-- 教程内容将由JavaScript动态加载 -->
+            </div>
+        </div>
+    </div>
+
+    <div id="help-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>命令提示</h2>
+            <div id="hint-content"></div>
+        </div>
+    </div>
+
+    <footer>
+        <p>Git 交互式学习平台 | 版权所有 &copy; 2025</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
