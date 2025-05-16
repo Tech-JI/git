@@ -122,7 +122,7 @@
 
 所有的提交必须符合 [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) 的规范. 所有的提交必须以以下格式:
 ```bash
-$ git commit -m "type(scope): message [option_list]"
+git commit -m "type(scope): message [option_list]"
 ```
 
 **NOTE !**    `scope` 一般情况下必须是以下的内容:
@@ -139,7 +139,7 @@ $ git commit -m "type(scope): message [option_list]"
 
 以上是2025SP时期JOJ3的git提交方式，在2024AU时期的ENGR151课程中是可以使用以下格式进行提交的:
 ```bash
-$ git commit -m "type(scope): joj message"
+git commit -m "type(scope): joj message"
 ```
 
 通常情况下build和joj没有次数限制，但有些时候有限制(ENGR151)，故而每次提交前要检查自己的代码，不要浪费build和joj的次数。
@@ -147,16 +147,16 @@ $ git commit -m "type(scope): joj message"
 以下的指令都是有效的:
 
 ```bash
-$ git commit -m "fix(p3): memory leak fixed []"
-$ git commit -m "style(ex5): improve code quality [build]"
-$ git commit -m "revert(ex4): undo latest code []"
-$ git commit -m "docs(ex2): add comments [build joj]"
+git commit -m "fix(p3): memory leak fixed []"
+git commit -m "style(ex5): improve code quality [build]"
+git commit -m "revert(ex4): undo latest code []"
+git commit -m "docs(ex2): add comments [build joj]"
 ```
 
 如果想要提交 **empty commit**，可以用以下指令 `--allow-empty`。 比如：
 
 ```bash
-$ git commit --allow-empty -m "chores(p1): wrong commit msg [build joj]"
+git commit --allow-empty -m "chores(p1): wrong commit msg [build joj]"
 ```
 
 
