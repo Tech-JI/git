@@ -169,14 +169,25 @@ git commit --allow-empty -m "chores(p1): wrong commit msg [build joj]"
 
    ```bash
    brew install node@22 # macOS
-   
+   ```
+
+   ```bash
    docker pull node:22-alpine
    docker run -it --rm --entrypoint sh node:22-alpine # Linux by Docker
-   
+   ```
+
+   ```bash
    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
    \. "$HOME/.nvm/nvm.sh"
    nvm install 22 # Linux by nvm
    ```
+
+   ```bash
+   winget install Schniz.fnm
+   fnm install 22 # Windows by fnm
+   ```
+
+   如果需要其他下载方式，可参考[Download Node.js®](https://nodejs.org/zh-cn/download)
 
    npm（注意：这三个字母均不大写）是一个NodeJS包管理和分发工具，已经成为了非官方的发布Node模块（包）的标准。npm的前体实际上是一个名为“pm”的bash实用程序，这是“pkgmakeinst”的简称——一个在各种平台上安装各种东西的bash函数。
 
@@ -184,7 +195,7 @@ git commit --allow-empty -m "chores(p1): wrong commit msg [build joj]"
    curl -qL https://www.npmjs.com/install.sh | sh
    ```
 
-2. **全局或项目安装 Commitizen**
+1. **全局或项目安装 Commitizen**
 
    ```bash
    # 全局安装
@@ -194,7 +205,7 @@ git commit --allow-empty -m "chores(p1): wrong commit msg [build joj]"
    npm install --save-dev commitizen
    ```
 
-3. **初始化适配器（以 cz-conventional-changelog 为例）**
+2. **初始化适配器（以 cz-conventional-changelog 为例）**
 
    ```bash
    # 项目根目录执行
@@ -202,7 +213,7 @@ git commit --allow-empty -m "chores(p1): wrong commit msg [build joj]"
    commitizen init cz-conventional-changelog --save-dev --save-exact
    ```
 
-4. **使用 `cz`（或 `git cz`）来提交**
+3. **使用 `cz`（或 `git cz`）来提交**
 
    ```bash
    # 提交时可替代 git commit
@@ -263,7 +274,9 @@ git commit --allow-empty -m "chores(p1): wrong commit msg [build joj]"
    curl -Lo lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/download/v${LAZYGIT_VERSION}/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz"
    tar xf lazygit.tar.gz lazygit
    sudo install lazygit -D -t /usr/local/bin/  # Ubuntu 25.04 earlier
+   ```
 
+   ```bash
    sudo apt install lazygit  # Ubuntu 25.10 later
    ```
 
