@@ -256,13 +256,19 @@ git commit --allow-empty -m "chores(p1): wrong commit msg [build joj]"
 
    ```bash
    brew install jesseduffield/lazygit/lazygit  # macOS
+   ```
    
+   ```bash
    LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | \grep -Po '"tag_name": *"v\K[^"]*')
    curl -Lo lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/download/v${LAZYGIT_VERSION}/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz"
    tar xf lazygit.tar.gz lazygit
    sudo install lazygit -D -t /usr/local/bin/  # Ubuntu 25.04 earlier
-   
+
    sudo apt install lazygit  # Ubuntu 25.10 later
+   ```
+
+   ```bash
+   winget install -e --id=JesseDuffield.lazygit # Windows
    ```
 
 2. **进入提交界面**
@@ -277,7 +283,7 @@ git commit --allow-empty -m "chores(p1): wrong commit msg [build joj]"
 
    然后将生成的提交消息复制到 LazyGit 提交框中。
 
-   也可以如下加入config.yml文件中以配置按`shift+c`键提交
+   也可以如下加入config.yml文件中以配置按`Shift+c`键的个性化提交方式
 
    ```yaml
    customCommands:
@@ -359,7 +365,9 @@ git commit --allow-empty -m "chores(p1): wrong commit msg [build joj]"
        loadingText: "Creating conventional commit..."
    ```
 
-   提交时按 `control+v` 选择所需选项，再按 `enter` 即可。
+   提交时按 `Ctrl+v` 选择所需选项，再按 `enter` 即可。
+
+   可以参考[Custom Commands Compendium](https://github.com/jesseduffield/lazygit/wiki/Custom-Commands-Compendium)以了解更多个性化指令
 
 # Reference
 24au ENGR1510J Lab1 & c0
