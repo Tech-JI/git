@@ -278,7 +278,7 @@ git commit --allow-empty -m "chores(p1): wrong commit msg [build joj]"
    然后将生成的提交消息复制到 LazyGit 提交框中。
 
 4. **配置 LazyGit Commit Prefix（可选）**
-   在 `~/.config/lazygit/config.yml` 中添加：
+   在 `~/.config/lazygit/config.yml` (Linux) `~/Library/Application\ Support/lazygit/config.yml` (macOS) 中添加：
 
    ```yaml
    customCommands:
