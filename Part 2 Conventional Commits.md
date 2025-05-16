@@ -137,7 +137,7 @@ $ git commit -m "type(scope): message [option_list]"
 - `build`: 触发对你代码的编译
 - `joj`: 在 ***JOJ3*** 上测试你的代码
 
-以上是2025SP时期JOJ3的git提交方式，在2024AU时期是可以使用以下格式进行提交的:
+以上是2025SP时期JOJ3的git提交方式，在2024AU时期的ENGR151课程中是可以使用以下格式进行提交的:
 ```bash
 $ git commit -m "type(scope): joj message"
 ```
@@ -181,7 +181,7 @@ $ git commit --allow-empty -m "chores(p1): wrong commit msg [build joj]"
    npm（注意：这三个字母均不大写）是一个NodeJS包管理和分发工具，已经成为了非官方的发布Node模块（包）的标准。npm的前体实际上是一个名为“pm”的bash实用程序，这是“pkgmakeinst”的简称——一个在各种平台上安装各种东西的bash函数。
 
    ```bash
-      curl -qL https://www.npmjs.com/install.sh | sh
+   curl -qL https://www.npmjs.com/install.sh | sh
    ```
 
 2. **全局或项目安装 Commitizen**
