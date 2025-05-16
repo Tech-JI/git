@@ -54,7 +54,7 @@
   * `!`（可选）：表示本次提交包含向后兼容的重大变动（BREAKING CHANGE）
   * `subject`：简短描述（不超过 50 字，首字母小写，不以句号结尾）
 
-了解更多：[Conventional Commits]([Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/))
+了解更多：([Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/))
 
 * **Body正文（可选）**
   详细描述为何作此更改，以及与之前行为的对比，换行宽度建议在 72 字以内。
@@ -160,10 +160,31 @@ $ git commit --allow-empty -m "chores(p1): wrong commit msg [build joj]"
 ```
 
 
-### 5.3 使用 Commitizen 交互式生成
+### 5.3 使用 [Commitizen](https://github.com/commitizen/cz-cli) 交互式生成
 
-1. **全局或项目安装 Commitizen**
-   * **前置条件**: 已安装 [Node.js](https://nodejs.org/zh-cn) 和 npm
+1. **前置条件**
+   安装 [Node.js](https://nodejs.org/zh-cn) 和 [npm](https://github.com/npm/cli)
+
+   Node.js发布于2009年5月，由Ryan Dahl开发，是一个基于Chrome V8引擎的JavaScript运行环境，使用了一个事件驱动、非阻塞式I/O模型，让JavaScript 运行在服务端的开发平台，它让JavaScript成为与PHP、Python、Perl、Ruby等服务端语言平起平坐的脚本语言。安装方式如下：
+
+   ```bash
+   brew install node@22 # macOS
+   
+   docker pull node:22-alpine
+   docker run -it --rm --entrypoint sh node:22-alpine # Linux by Docker
+   
+   curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+   \. "$HOME/.nvm/nvm.sh"
+   nvm install 22 # Linux by nvm
+   ```
+
+   npm（注意：这三个字母均不大写）是一个NodeJS包管理和分发工具，已经成为了非官方的发布Node模块（包）的标准。npm的前体实际上是一个名为“pm”的bash实用程序，这是“pkgmakeinst”的简称——一个在各种平台上安装各种东西的bash函数。
+
+   ```bash
+      curl -qL https://www.npmjs.com/install.sh | sh
+   ```
+
+2. **全局或项目安装 Commitizen**
 
    ```bash
    # 全局安装
@@ -173,7 +194,7 @@ $ git commit --allow-empty -m "chores(p1): wrong commit msg [build joj]"
    npm install --save-dev commitizen
    ```
 
-2. **初始化适配器（以 cz-conventional-changelog 为例）**
+3. **初始化适配器（以 cz-conventional-changelog 为例）**
 
    ```bash
    # 项目根目录执行
@@ -181,7 +202,7 @@ $ git commit --allow-empty -m "chores(p1): wrong commit msg [build joj]"
    commitizen init cz-conventional-changelog --save-dev --save-exact
    ```
 
-3. **使用 `cz`（或 `git cz`）来提交**
+4. **使用 `cz`（或 `git cz`）来提交**
 
    ```bash
    # 提交时可替代 git commit
@@ -235,10 +256,12 @@ $ git commit --allow-empty -m "chores(p1): wrong commit msg [build joj]"
 
    ```bash
    brew install jesseduffield/lazygit/lazygit  # macOS
+   
    LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | \grep -Po '"tag_name": *"v\K[^"]*')
    curl -Lo lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/download/v${LAZYGIT_VERSION}/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz"
    tar xf lazygit.tar.gz lazygit
    sudo install lazygit -D -t /usr/local/bin/  # Ubuntu 25.04 earlier
+   
    sudo apt install lazygit  # Ubuntu 25.10 later
    ```
 
@@ -327,7 +350,7 @@ $ git commit --allow-empty -m "chores(p1): wrong commit msg [build joj]"
    提交时按 `c-v` 选择所需选项，再按 `enter` 即可。
 
 # Reference
-24au ENGR1510J Lab1 & h0
+24au ENGR1510J Lab1 & c0
 
 25sp ECE2800J README
 
