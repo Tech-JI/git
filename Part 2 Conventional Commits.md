@@ -266,7 +266,7 @@ git commit --allow-empty -m "chores(p1): wrong commit msg [build joj]"
 1. **安装并打开 LazyGit**
 
    ```bash
-   brew install jesseduffield/lazygit/lazygit  # macOS
+   brew install lazygit  # macOS
    ```
    
    ```bash
@@ -283,6 +283,8 @@ git commit --allow-empty -m "chores(p1): wrong commit msg [build joj]"
    ```bash
    winget install -e --id=JesseDuffield.lazygit # Windows
    ```
+
+   其他下载方式参考[Installation](https://github.com/jesseduffield/lazygit#installation)
 
 2. **进入提交界面**
    在终端中运行 `lazygit`，然后按 `c`（commit）键进入提交消息编辑。
