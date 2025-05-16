@@ -54,7 +54,7 @@
   * `!`（可选）：表示本次提交包含向后兼容的重大变动（BREAKING CHANGE）
   * `subject`：简短描述（不超过 50 字，首字母小写，不以句号结尾）
 
-了解更多：([Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/))
+了解更多：[Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/)
 
 * **Body正文（可选）**
   详细描述为何作此更改，以及与之前行为的对比，换行宽度建议在 72 字以内。
