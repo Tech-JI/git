@@ -277,7 +277,19 @@ git commit --allow-empty -m "chores(p1): wrong commit msg [build joj]"
 
    然后将生成的提交消息复制到 LazyGit 提交框中。
 
-4. **配置 LazyGit Commit Prefix（可选）**
+   也可以如下加入config.yml文件中以配置按`shift+c`键提交
+
+   ```yaml
+   customCommands:
+     - key: "C"
+       command: "git cz c"
+       description: "commit with commitizen"
+       context: "files"
+       loadingText: "opening commitizen commit tool"
+       subprocess: true
+   ```
+
+5. **配置 LazyGit Commit Prefix（可选）**
    在 `~/.config/lazygit/config.yml` (Linux) `~/Library/Application\ Support/lazygit/config.yml` (macOS) 中添加：
 
    ```yaml
@@ -347,7 +359,7 @@ git commit --allow-empty -m "chores(p1): wrong commit msg [build joj]"
        loadingText: "Creating conventional commit..."
    ```
 
-   提交时按 `c-v` 选择所需选项，再按 `enter` 即可。
+   提交时按 `control+v` 选择所需选项，再按 `enter` 即可。
 
 # Reference
 24au ENGR1510J Lab1 & c0
