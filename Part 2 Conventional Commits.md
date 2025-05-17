@@ -54,7 +54,7 @@
   * `!`（可选）：表示本次提交包含向后兼容的重大变动（BREAKING CHANGE）
   * `subject`：简短描述（不超过 50 字，首字母小写，不以句号结尾）
 
-了解更多：[Conventional Commits]([Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/))
+了解更多：[Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/)
 
 * **Body正文（可选）**
   详细描述为何作此更改，以及与之前行为的对比，换行宽度建议在 72 字以内。
@@ -122,7 +122,7 @@
 
 所有的提交必须符合 [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) 的规范. 所有的提交必须以以下格式:
 ```bash
-$ git commit -m "type(scope): message [option_list]"
+git commit -m "type(scope): message [option_list]"
 ```
 
 **NOTE !**    `scope` 一般情况下必须是以下的内容:
@@ -137,9 +137,9 @@ $ git commit -m "type(scope): message [option_list]"
 - `build`: 触发对你代码的编译
 - `joj`: 在 ***JOJ3*** 上测试你的代码
 
-以上是2025SP时期JOJ3的git提交方式，在2024AU时期是可以使用以下格式进行提交的:
+以上是2025SP时期JOJ3的git提交方式，在2024AU时期的ENGR151课程中是可以使用以下格式进行提交的:
 ```bash
-$ git commit -m "type(scope): joj message"
+git commit -m "type(scope): joj message"
 ```
 
 通常情况下build和joj没有次数限制，但有些时候有限制(ENGR151)，故而每次提交前要检查自己的代码，不要浪费build和joj的次数。
@@ -147,26 +147,57 @@ $ git commit -m "type(scope): joj message"
 以下的指令都是有效的:
 
 ```bash
-$ git commit -m "fix(p3): memory leak fixed []"
-$ git commit -m "style(ex5): improve code quality [build]"
-$ git commit -m "revert(ex4): undo latest code []"
-$ git commit -m "docs(ex2): add comments [build joj]"
+git commit -m "fix(p3): memory leak fixed []"
+git commit -m "style(ex5): improve code quality [build]"
+git commit -m "revert(ex4): undo latest code []"
+git commit -m "docs(ex2): add comments [build joj]"
 ```
 
 如果想要提交 **empty commit**，可以用以下指令 `--allow-empty`。 比如：
 
 ```bash
-$ git commit --allow-empty -m "chores(p1): wrong commit msg [build joj]"
+git commit --allow-empty -m "chores(p1): wrong commit msg [build joj]"
 ```
 
 
----
 ## 6. 快速生成 Conventional Commit工具
 
-### 6.1 使用 Commitizen 交互式生成
+### 6.1 使用 [Commitizen](https://github.com/commitizen/cz-cli) 交互式生成
+
+1. **前置条件**
+   安装 [Node.js](https://nodejs.org/zh-cn) 和 [npm](https://github.com/npm/cli)
+
+   Node.js发布于2009年5月，由Ryan Dahl开发，是一个基于Chrome V8引擎的JavaScript运行环境，使用了一个事件驱动、非阻塞式I/O模型，让JavaScript 运行在服务端的开发平台，它让JavaScript成为与PHP、Python、Perl、Ruby等服务端语言平起平坐的脚本语言。安装方式如下：
+
+   ```bash
+   brew install node@22 # macOS
+   ```
+
+   ```bash
+   docker pull node:22-alpine
+   docker run -it --rm --entrypoint sh node:22-alpine # Linux by Docker
+   ```
+
+   ```bash
+   curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+   \. "$HOME/.nvm/nvm.sh"
+   nvm install 22 # Linux by nvm
+   ```
+
+   ```bash
+   winget install Schniz.fnm
+   fnm install 22 # Windows by fnm
+   ```
+
+   如果需要其他下载方式，可参考[Download Node.js®](https://nodejs.org/zh-cn/download)
+
+   npm（注意：这三个字母均不大写）是一个NodeJS包管理和分发工具，已经成为了非官方的发布Node模块（包）的标准。npm的前体实际上是一个名为“pm”的bash实用程序，这是“pkgmakeinst”的简称——一个在各种平台上安装各种东西的bash函数。
+
+   ```bash
+   curl -qL https://www.npmjs.com/install.sh | sh
+   ```
 
 1. **全局或项目安装 Commitizen**
-   * **前置条件**: 已安装 [Node.js](https://nodejs.org/zh-cn) 和 npm
 
    ```bash
    # 全局安装
@@ -211,36 +242,51 @@ $ git commit --allow-empty -m "chores(p1): wrong commit msg [build joj]"
 
    ```jsonc
    {
-     // 启用插件
-     "conventionalCommits.enable": true,
-     // 自定义 type 列表
-     "conventionalCommits.types": [
-       { "type": "feat", "description": "新功能" },
-       { "type": "fix",  "description": "Bug 修复" },
-       // … 其他类型 …
+     // 自定义 scope 列表
+     "conventionalCommits.scopes": [
+       "ex1",
+       "ex2",
+       "p1"
+       //其他scope
      ]
    }
    ```
 
 3. **使用方式**
 
-   * 在 Source Control 面板点击 “+” 准备提交
-   * 按下插件提供的快捷键（如 `Ctrl+Alt+C`）或点击 “Conventional Commit” 按钮
-   * 在弹出的快速选择窗口中依次填写 `type`、`scope`、`subject`，自动生成符合规范的提交消息
+   * `Command + Shift + P` 或者 `Ctrl + Shift + P`, 输入 `Conventional Commits`, 然后按 `Enter`
+   * 或可以点击源代码管理按钮，再点击该窗口中的圆圈符号
+   * 在弹出的快速选择窗口中依次填写或选择已有的 `type`、`scope`、`emoji`、`subject`，自动生成符合规范的提交消息
 
 ### 6.3 在 LazyGit 中快速生成 Conventional Commit
 
 1. **安装并打开 LazyGit**
 
    ```bash
-   brew install jesseduffield/lazygit/lazygit  # macOS
-   sudo add-apt-repository ppa:lazygit-team/release && sudo apt update && sudo apt install lazygit  # Ubuntu
+   brew install lazygit  # macOS
    ```
+   
+   ```bash
+   LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | \grep -Po '"tag_name": *"v\K[^"]*')
+   curl -Lo lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/download/v${LAZYGIT_VERSION}/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz"
+   tar xf lazygit.tar.gz lazygit
+   sudo install lazygit -D -t /usr/local/bin/  # Ubuntu 25.04 earlier
+   ```
+
+   ```bash
+   sudo apt install lazygit  # Ubuntu 25.10 later
+   ```
+
+   ```bash
+   winget install -e --id=JesseDuffield.lazygit # Windows
+   ```
+
+   其他下载方式参考[Installation](https://github.com/jesseduffield/lazygit#installation)
 
 2. **进入提交界面**
    在终端中运行 `lazygit`，然后按 `c`（commit）键进入提交消息编辑。
 
-3. **利用 Commitizen**
+3. **利用 Commitizen（可选）**
    如果已在项目中安装并配置好 Commitizen，可以在 LazyGit 的 commit 输入框中先执行交互式命令：
 
    ```bash
@@ -249,18 +295,95 @@ $ git commit --allow-empty -m "chores(p1): wrong commit msg [build joj]"
 
    然后将生成的提交消息复制到 LazyGit 提交框中。
 
-4. **配置 LazyGit Commit Prefix（可选）**
-   在 `~/.config/lazygit/config.yml` 中添加：
+   也可以如下加入config.yml文件中以配置按`Shift+c`键的个性化提交方式
 
    ```yaml
-   gui:
-     commit:
-       prefix: ""               # 让你先手动输入类型
-       template: ""             # 也可以设置预定义模板
+   customCommands:
+     - key: "C"
+       command: "git cz c"
+       description: "commit with commitizen"
+       context: "files"
+       loadingText: "opening commitizen commit tool"
+       subprocess: true
    ```
 
-   提交时按 `t` 选择 `feat`/`fix` 等，再按 `enter` 即可。
+5. **配置 LazyGit Commit Prefix（可选）**
+   在 `~/.config/lazygit/config.yml` (Linux) `~/Library/Application\ Support/lazygit/config.yml` (macOS) 中添加：
+
+   ```yaml
+   customCommands:
+     - key: "<c-v>"
+       context: "global"
+       description: "Create new conventional commit"
+       prompts:
+         - type: "menu"
+           key: "Type"
+           title: "Type of change"
+           options:
+             - name: "build"
+               description: "Changes that affect the build system or external dependencies"
+               value: "build"
+             - name: "feat"
+               description: "A new feature"
+               value: "feat"
+             - name: "fix"
+               description: "A bug fix"
+               value: "fix"
+             - name: "chore"
+               description: "Other changes that don't modify src or test files"
+               value: "chore"
+             - name: "ci"
+               description: "Changes to CI configuration files and scripts"
+               value: "ci"
+             - name: "docs"
+               description: "Documentation only changes"
+               value: "docs"
+             - name: "perf"
+               description: "A code change that improves performance"
+               value: "perf"
+             - name: "refactor"
+               description: "A code change that neither fixes a bug nor adds a feature"
+               value: "refactor"
+             - name: "revert"
+               description: "Reverts a previous commit"
+               value: "revert"
+             - name: "style"
+               description: "Changes that do not affect the meaning of the code"
+               value: "style"
+             - name: "test"
+               description: "Adding missing tests or correcting existing tests"
+               value: "test"
+         - type: "input"
+           title: "Scope"
+           key: "Scope"
+           initialValue: ""
+         - type: "menu"
+           key: "Breaking"
+           title: "Breaking change"
+           options:
+             - name: "no"
+               value: ""
+             - name: "yes"
+               value: "!"
+         - type: "input"
+           title: "message"
+           key: "Message"
+           initialValue: ""
+         - type: "confirm"
+           key: "Confirm"
+           title: "Commit"
+           body: "Are you sure you want to commit?"
+       command: "git commit --message '{{.Form.Type}}{{ if .Form.Scope }}({{ .Form.Scope }}){{ end }}{{.Form.Breaking}}: {{.Form.Message}}'"
+       loadingText: "Creating conventional commit..."
+   ```
+
+   提交时按 `Ctrl+v` 选择所需选项，再按 `enter` 即可。
+
+   可以参考[Custom Commands Compendium](https://github.com/jesseduffield/lazygit/wiki/Custom-Commands-Compendium)以了解更多个性化指令
 
 # Reference
-24au ENGR1510J Lab1 & h0
+24au ENGR1510J Lab1 & c0
+
 25sp ECE2800J README
+
+https://github.com/jesseduffield/lazygit
