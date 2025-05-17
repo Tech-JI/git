@@ -23,7 +23,7 @@
 
 ---
 
-## 5. Conventional Commit 的常见格式（三段式提交格式），使用 Commitizen 在命令行生成
+## 5. Conventional Commit 的常见格式（三段式提交格式）
 
 ### 5.1 常见格式（Header / Body / Footer）
 
@@ -160,7 +160,10 @@ $ git commit --allow-empty -m "chores(p1): wrong commit msg [build joj]"
 ```
 
 
-### 5.3 使用 Commitizen 交互式生成
+---
+## 6. 快速生成 Conventional Commit工具
+
+### 6.1 使用 Commitizen 交互式生成
 
 1. **全局或项目安装 Commitizen**
    * **前置条件**: 已安装 [Node.js](https://nodejs.org/zh-cn) 和 npm
@@ -177,7 +180,6 @@ $ git commit --allow-empty -m "chores(p1): wrong commit msg [build joj]"
 
    ```bash
    # 项目根目录执行
-   Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process
    commitizen init cz-conventional-changelog --save-dev --save-exact
    ```
 
@@ -199,11 +201,7 @@ $ git commit --allow-empty -m "chores(p1): wrong commit msg [build joj]"
    4. **body**（详细说明，可多行）
    5. **footer**（关联 Issue 或 BREAKING CHANGE）
 
----
-
-## 6. 如何使用 VSCode 插件或 LazyGit 快速生成 Conventional Commit
-
-### 6.1 在 VSCode 中使用 Conventional Commit 插件
+### 6.2 在 VSCode 中使用 Conventional Commit 插件
 
 1. **安装插件**
    搜索并安装 “Conventional Commits” 或 “Conventional Commit Messages” 插件（例如 vivaxy/vscode-conventional-commits）。
@@ -230,7 +228,7 @@ $ git commit --allow-empty -m "chores(p1): wrong commit msg [build joj]"
    * 按下插件提供的快捷键（如 `Ctrl+Alt+C`）或点击 “Conventional Commit” 按钮
    * 在弹出的快速选择窗口中依次填写 `type`、`scope`、`subject`，自动生成符合规范的提交消息
 
-### 6.2 在 LazyGit 中快速生成 Conventional Commit
+### 6.3 在 LazyGit 中快速生成 Conventional Commit
 
 1. **安装并打开 LazyGit**
 
