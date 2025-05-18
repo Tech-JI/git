@@ -495,7 +495,7 @@ ssh-ed25519 <some very long thing> your_email@example.com
 ```bash
 git branch -r # 显示远端仓库
 git branch -vv # 显示远端仓库与本地仓库的连接情况
-git remote add origin <UCL> # 本地仓库连接特定的远端仓库
+git remote add origin <UCL> # 本地仓库连接特定的远端仓库,origin可随意命名
 git fetch # 获取远端更新
 git pull  # git fetch + git merge 尝试覆盖本地文件（慎用）
 git push # 本地commits推送到远端仓库
