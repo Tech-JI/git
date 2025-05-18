@@ -20,7 +20,8 @@
     - [package.json / package-lock.json](#packagejson--package-lockjson)
     - [node\_modules/](#node_modules)
   - [Bun(类似于nvm+npm+npx)](#bun类似于nvmnpmnpx)
-  - [参考资料:](#参考资料)
+  - [Github 基础](#github-基础)
+  - [参考资料](#参考资料)
 
 ## Git Hook 与 Husky 
 
@@ -436,5 +437,74 @@ bun test           # 运行测试
 bun build          # 打包项目
 ```
 
-## 参考资料:
+## Github 基础
+Github 是一个基于 Git 的代码托管平台，广泛用于版本控制和协作开发。以下是使用 GitHub 的基本步骤：
+
+1. **创建 Github 账号** ： 访问 https://github.com/
+2. **利用 Git 连接本地仓库与远端仓库**
+   
+如果希望使用Github上面现有的远端仓库，那么可以利用`git clone`在本地创建相同的Git仓库
+```bash
+git clone <URL>
+# git clone -b branch-name <UCR> 克隆特定分支
+# git clone --depth x https://github.com/username/repository.git 克隆最近x次提交
+```
+`<URL>`可以在Github仓库里面的`Code`里面找到，通常有HTTP与SSH两种，HTTP不需要配置但是要求验证Github仓库，SSH则基于公钥与私钥验证更为方便。下面讲解SSH的配置过程：
+1. 安装openssh（包括包含了 ssh、scp、sftp 等工具）
+```bash
+sudo apt update
+sudo apt install openssh-client
+```
+2. 检查ssh文件
+```bash
+ls -al ~/.ssh
+```
+
+3. 生成公钥与私钥
+```bash
+ssh-keygen -t ed25519 -C "your_email@example.com"
+```
+或者使用（如果前者不行）
+```bash
+ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
+```
+
+4. 配置ssh
+
+可以找到 id_ed25519 和 id_ed25519.pub 这两个文件
+用文本编辑器打开 id_ed25519.pub 文件，或者在终端中输入以下命令：
+```bash
+cat id_ed25519.pub
+```
+接着，打开 Github 。点击右上角的按钮，然后进入“Settings（设置）”。
+
+在设置页面中，找到“SSH / GPG Keys”选项。
+
+在 SSH Key 部分，点击“Add Key（添加密钥）”。
+
+将你 id_ed25519.pub 文件中的内容粘贴到文本框中。如果成功，密钥名称会自动生成。你粘贴的内容应该类似于下面的格式：
+
+```bash
+ssh-ed25519 <some very long thing> your_email@example.com
+```
+然后点击“Add Key”按钮。系统会显示绿色的成功提示横幅。
+
+重要提示：只复制公钥内容，也就是后缀为 .pub 的文件。不要复制或使用私钥。
+
+3. **Github 常用的 Git 指令**
+```bash
+git branch -r # 显示远端仓库
+git branch -vv # 显示远端仓库与本地仓库的连接情况
+git remote add origin <UCL> # 本地仓库连接特定的远端仓库
+git fetch # 获取远端更新
+git pull  # git fetch + git merge 尝试覆盖本地文件（慎用）
+git push # 本地commits推送到远端仓库
+git checkout # 切换到指定分支，包括远端与本地，如果是远端会在本地生成相同的本地分支，形成连接
+git branch --set-upstream-to=origin/<远程分支名> <本地分支名> # 设置关联
+```
+
+
+## 参考资料
+ENGR1510JFA2024 &nbsp;&nbsp;&nbsp; doc: Git 
+
 ENGR1000JSU2025-3 &nbsp;&nbsp;&nbsp; doc: Starting at SilverFOCS
